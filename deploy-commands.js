@@ -27,6 +27,10 @@ const commands = [
         .addStringOption(option => option.setName('user')
             .setDescription('Enter a user to get their L count')
             .setRequired(true)),
+
+    new SlashCommandBuilder().setName('leaderboard')
+        .setDescription('Get the W and L leaderboard')
+        
 ]
 	.map(command => command.toJSON());
 
