@@ -33,7 +33,7 @@ function setWCount(user, n) {
     console.log('Updated ' + user.username + ' (' + user + ')\'s w count to ' + n);
 }
 
-// fucntion to set a user's l count to n
+// function to set a user's l count to n
 function setLCount(user, n) {
     const data = JSON.parse(fs.readFileSync('./data.json'));
 
@@ -75,6 +75,7 @@ function getLCount(user) {
     }
     // if user doesn't exist in data.json, return 0
     console.log('User ' + user + ' does not exist in data.json, returning 0');
+
     return 0;
 }
 
@@ -85,6 +86,28 @@ function leaderboard() {
     let leaderboard = '';
     for (let i = 0; i < ordered.length; i++) {
         leaderboard += (i + 1) + '. ' + ordered[i] + ' has ' + data[ordered[i]].w_count + ' W\s and ' + data[ordered[i]].l_count + ' L\s 💀💀 \n';
+    }
+    return leaderboard;
+}
+
+function l_leaderboard() {
+    // order data.json by l count
+    const data = JSON.parse(fs.readFileSync('./data.json'));
+    const ordered = Object.keys(data).sort((a, b) => data[b].l_count - data[a].l_count);
+    let leaderboard = '';
+    for (let i = 0; i < ordered.length; i++) {
+        leaderboard += (i + 1) + '. ' + ordered[i] + ' has ' + data[ordered[i]].l_count + ' L\s 💀💀 \n';
+    }
+    return leaderboard;
+}
+
+function w_leaderboard() {
+    // order data.json by w count
+    const data = JSON.parse(fs.readFileSync('./data.json'));
+    const ordered = Object.keys(data).sort((a, b) => data[b].w_count - data[a].w_count);
+    let leaderboard = '';
+    for (let i = 0; i < ordered.length; i++) {
+        leaderboard += (i + 1) + '. ' + ordered[i] + ' has ' + data[ordered[i]].w_count + ' W\s 😄😄 \n';
     }
     return leaderboard;
 }
@@ -116,28 +139,33 @@ client.on('interactionCreate', async interaction => {
         target_user_raw = target_user.replace('<@', '').replace('>', '');
         target_username = client.users.cache.get(target_user_raw).username;
 
-        console.log(username+ ' (' + user + ') used ' + commandName + ' on ' + target_username + ' (' + target_user + ')');
+        console.log(username+ ' (' + user + ') used ' + commandName + ' on ' + target_user + ' (' + target_user + ')');
     }
 
 	if (commandName === 'massive_w' && interaction.options) {
         const w_count = getWCount(target_user);
         setWCount(target_user, w_count + 1);
-        interaction.reply(target_username + ' just aquired a massive W! 🔥🔥💯\n' + target_username + ' now has ' + getWCount(target_user) + ' Ws! 💪');
+        interaction.reply(target_user + ' just aquired a massive W! 🔥🔥💯\n' + target_user + ' now has ' + getWCount(target_user) + ' Ws! 💪');
 
     } else if (commandName === 'massive_l' && interaction.options) {
         const l_count = getLCount(target_user);
         setLCount(target_user, l_count + 1);
-        interaction.reply(target_username + ' just took a massive L! 😭😭\n' + target_username + ' now has ' + getLCount(target_user) + ' Ls! 💀💀💀');
+        interaction.reply(target_user + ' just took a massive L! 😭😭\n' + target_user + ' now has ' + getLCount(target_user) + ' Ls! 💀💀💀');
     
     } else if (commandName === 'w_count' && interaction.options) {
-        interaction.reply(target_username + ' has ' + getWCount(target_user) + ' Ws! 🔥💯');
+        interaction.reply(target_user + ' has ' + getWCount(target_user) + ' Ws! 🔥💯');
     
     } else if (commandName === 'l_count' && interaction.options) {
-        interaction.reply(target_username + ' has ' + getLCount(target_user) + ' Ls! 💀');
+        interaction.reply(target_user + ' has ' + getLCount(target_user) + ' Ls! 💀');
 
     } else if (commandName === 'leaderboard') {
         interaction.reply(leaderboard());
 
+    } else if (commandName === 'w_leaderboard') {
+        interaction.reply(w_leaderboard());
+
+    } else if (commandName === 'l_leaderboard') {
+        interaction.reply(l_leaderboard());
     }
 });
 

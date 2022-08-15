@@ -1,6 +1,6 @@
 const { SlashCommandBuilder, Routes } = require('discord.js');
 const { REST } = require('@discordjs/rest');
-const { clientId, guildId, token } = require('./config.json');
+const { clientId, token } = require('./config.json');
 
 
 const commands = [
@@ -29,13 +29,18 @@ const commands = [
             .setRequired(true)),
 
     new SlashCommandBuilder().setName('leaderboard')
-        .setDescription('Get the W and L leaderboard')
+        .setDescription('Get the W and L leaderboard'),
         
+    new SlashCommandBuilder().setName('w_leaderboard')
+        .setDescription('Get the W leaderboard'),
+
+    new SlashCommandBuilder().setName('l_leaderboard')
+        .setDescription('Get the L leaderboard')
 ]
 	.map(command => command.toJSON());
 
 const rest = new REST({ version: '10' }).setToken(token);
 
-rest.put(Routes.applicationGuildCommands(clientId, guildId), { body: commands })
+rest.put(Routes.applicationCommands(clientId), { body: commands })
 	.then(() => console.log('Successfully registered application commands.'))
 	.catch(console.error);
